@@ -26,4 +26,10 @@ export class Deck {
   public length () {
     return this.cards.length
   }
+
+  public getCards (count) {
+    const modifiedCount = this.cards.length < count ? this.cards.length : count
+
+    return this.cards.splice(0, modifiedCount)
+  }
 }

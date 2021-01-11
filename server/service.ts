@@ -7,3 +7,14 @@ export const createDeck = (): { id: string, deck: Deck } => {
   const result = dataAccess.createDeck(shuffle)
   return result
 }
+
+export const extractCards = (id: string, count: number) => {
+  const deck = dataAccess.getDeckById(id)
+
+  const cards = deck.getCards(count)
+
+  return {
+    cards,
+    deck
+  }
+}
