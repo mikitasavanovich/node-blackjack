@@ -1,0 +1,16 @@
+.buttons {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+}
+
+.button {
+  cursor: pointer;
+  box-shadow: 0 0 3px 0 black;
+  border-radius: 2px;
+  border: 0;
+  background-color: white;
+  min-width: 6rem;
+  min-height: 2rem;
+  font-size: 1.2rem;
+}

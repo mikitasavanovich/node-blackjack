@@ -1,0 +1,10 @@
+.player {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.player__info, .player__hand {
+  display: flex;
+  gap: 0.5rem;
+}
