@@ -12,7 +12,8 @@ router.post('/sign-up', authController.signUp)
 router.post('/sign-in', authController.signIn)
 
 // user routes
-router.get('/user-info', passport.authenticate('basic', { session: false }), userControler.getUserInfo)
+router.get('/user/info', passport.authenticate('basic', { session: false }), userControler.getUserInfo)
+router.post('/user/wallet', passport.authenticate('basic', { session: false }), userControler.addToWallet)
 
 router.post('/deck', controller.createDeck)
 router.post('/deck/:id/cards', controller.extractCards)

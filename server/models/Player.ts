@@ -31,4 +31,8 @@ export class Player {
       wallet: this.wallet
     }
   }
+
+  public addToWallet (sum: number) {
+    this.wallet += sum
+  }
 }
