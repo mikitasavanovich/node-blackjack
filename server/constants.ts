@@ -33,7 +33,7 @@ export enum GAME_STATE {
 
 export enum PLAYER_STATE {
   HAS_TURN = 'HAS_TURN',
-  WAITS = 'WAITS',
+  WAIT = 'WAIT',
   HAS_LOST = 'HAS_LOST',
   HAS_WON = 'HAS_WON'
 }

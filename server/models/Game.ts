@@ -11,6 +11,10 @@ export class Game {
   timeoutMS = GAME_TIMEOUT_MS
   state = GAME_STATE.JOINING
 
+  public hasPlayer (player: Player) {
+    return this.players.find(playerState => playerState.playerId === player.id)
+  }
+
   public addPlayer (player: Player) {
     const playerGameState = new PlayerGameState(player)
     this.players.push(playerGameState)

@@ -22,3 +22,18 @@ export const getGames = (ctx: Context) => {
 
   ctx.body = games
 }
+
+export const joinGame = (ctx: Context) => {
+  const player = ctx.state.user as Player
+  const gameId: string = ctx.params.id
+
+  const updatedGame = gameService.addPlayerToGame(gameId, player)
+
+  if (updatedGame === null) {
+    ctx.throw(404)
+  } else if (updatedGame === false) {
+    ctx.throw(400)
+  }
+
+  ctx.body = updatedGame.serialize()
+}

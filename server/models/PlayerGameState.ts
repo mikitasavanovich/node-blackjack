@@ -6,7 +6,7 @@ export class PlayerGameState {
   playerId: string;
   hand: Card[] = [];
   bet: number = 0;
-  state = PLAYER_STATE.WAITS
+  state = PLAYER_STATE.WAIT
 
   constructor (player: Player) {
     this.playerId = player.id

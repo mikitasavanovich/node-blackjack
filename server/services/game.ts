@@ -14,3 +14,19 @@ export const getGames = (options: { state?: GAME_STATE }) => {
 
   return games
 }
+
+export const addPlayerToGame = (gameId: string, player: Player) => {
+  const game = gameData.findGame({ id: gameId })
+
+  if (!game) {
+    return null
+  }
+
+  if (game.hasPlayer(player)) {
+    return false
+  }
+
+  game.addPlayer(player)
+
+  return game
+}

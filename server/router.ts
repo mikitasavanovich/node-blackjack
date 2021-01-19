@@ -18,4 +18,6 @@ router.post('/user/wallet', passport.authenticate('basic', { session: false }), 
 // game routes
 router.post('/games', passport.authenticate('basic', { session: false }), gameController.createGame)
 router.get('/games', passport.authenticate('basic', { session: false }), gameController.getGames)
+router.post('/games/:id/join', passport.authenticate('basic', { session: false }), gameController.joinGame)
+
 export default router
