@@ -2,13 +2,10 @@ import Koa from 'koa'
 import router from './router'
 import bodyParser from 'koa-bodyparser'
 import passport from 'koa-passport'
-import { Casino } from './models/Casino'
 
 require('./passport')
 
 const app = new Koa()
-
-app.context.casino = new Casino()
 
 // app.use(async (ctx, next) => {
 //   try {

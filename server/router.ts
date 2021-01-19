@@ -16,5 +16,6 @@ router.get('/user/info', passport.authenticate('basic', { session: false }), use
 router.post('/user/wallet', passport.authenticate('basic', { session: false }), userControler.addToWallet)
 
 // game routes
-router.post('/game', passport.authenticate('basic', { session: false }), gameController.createGame)
+router.post('/games', passport.authenticate('basic', { session: false }), gameController.createGame)
+router.get('/games', passport.authenticate('basic', { session: false }), gameController.getGames)
 export default router

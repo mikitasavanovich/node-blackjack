@@ -1,12 +1,16 @@
-import { Casino } from '../models/Casino'
-import { Game } from '../models/Game'
 import { Player } from '../models/Player'
+import * as gameData from '../data-access/game'
+import { GAME_STATE } from '../constants'
 
-export const createGame = (player: Player, casino: Casino) => {
-  const game = new Game()
-
+export const createGame = (player: Player) => {
+  const game = gameData.createGame()
   game.addPlayer(player)
-  casino.addGame(game)
 
   return game
+}
+
+export const getGames = (options: { state?: GAME_STATE }) => {
+  const games = gameData.getGames(options)
+
+  return games
 }

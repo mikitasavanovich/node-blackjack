@@ -30,3 +30,10 @@ export enum GAME_STATE {
   DEALER_TURN = 'DEALER_TURN',
   FINISHED = 'FINISHED'
 }
+
+export enum PLAYER_STATE {
+  HAS_TURN = 'HAS_TURN',
+  WAITS = 'WAITS',
+  HAS_LOST = 'HAS_LOST',
+  HAS_WON = 'HAS_WON'
+}
