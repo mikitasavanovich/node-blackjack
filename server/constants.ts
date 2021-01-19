@@ -20,3 +20,13 @@ export enum CARD_VALUE {
   KING = 'KING',
   ACE = 'ACE'
 }
+
+export const GAME_TIMEOUT_MS = 30000
+
+export enum GAME_STATE {
+  JOINING = 'JOINING',
+  STARTING = 'STARTING',
+  PLAYER_TURN = 'PLAYER_TURN',
+  DEALER_TURN = 'DEALER_TURN',
+  FINISHED = 'FINISHED'
+}

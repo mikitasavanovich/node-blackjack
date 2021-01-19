@@ -32,6 +32,12 @@ export class Deck {
 
     return this.cards.splice(0, modifiedCount)
   }
+
+  public serialize () {
+    return {
+      length: this.length()
+    }
+  }
 }
 
 // 1st player -> POST '/game' -> new Game(title) -> joining state

@@ -3,7 +3,7 @@ import Router from 'koa-router'
 import passport from 'koa-passport'
 import * as authController from './controllers/auth'
 import * as userControler from './controllers/user'
-import * as controller from './controller'
+import * as gameController from './controllers/game'
 
 const router = new Router<DefaultState, Context>({ prefix: '/api' })
 
@@ -15,7 +15,6 @@ router.post('/sign-in', authController.signIn)
 router.get('/user/info', passport.authenticate('basic', { session: false }), userControler.getUserInfo)
 router.post('/user/wallet', passport.authenticate('basic', { session: false }), userControler.addToWallet)
 
-router.post('/deck', controller.createDeck)
-router.post('/deck/:id/cards', controller.extractCards)
-
+// game routes
+router.post('/game', passport.authenticate('basic', { session: false }), gameController.createGame)
 export default router
