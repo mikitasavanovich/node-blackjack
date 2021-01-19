@@ -6,6 +6,7 @@ const router = new Router({ prefix: '/api' })
 
 // auth routes
 router.post('/sign-up', authController.signUp)
+router.post('/sign-in', authController.signIn)
 
 router.post('/deck', controller.createDeck)
 router.post('/deck/:id/cards', controller.extractCards)

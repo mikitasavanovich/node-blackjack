@@ -18,3 +18,21 @@ export const signUp = (ctx: Context) => {
     token
   }
 }
+
+export const signIn = (ctx: Context) => {
+  const { username, password } = ctx.request.body
+
+  if (!username || !password) {
+    ctx.throw(401)
+  }
+
+  const token = authService.signIn(username, password)
+
+  if (!token) {
+    ctx.throw(401)
+  }
+
+  ctx.body = {
+    token
+  }
+}

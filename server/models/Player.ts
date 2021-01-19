@@ -15,4 +15,8 @@ export class Player {
   public getAuthToken (): string {
     return Buffer.from(`${this.username}:${this.password}`).toString('base64')
   }
+
+  public validateCredentials (username: string, password: string): boolean {
+    return this.username === username && this.password === password
+  }
 }

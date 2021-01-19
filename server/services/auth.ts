@@ -11,3 +11,17 @@ export const signUp = (username: string, password: string): string | null => {
 
   return player.getAuthToken()
 }
+
+export const signIn = (username: string, password: string): string | null => {
+  const player = playerData.findPlayer({ username })
+
+  if (!player) {
+    return
+  }
+
+  if (!player.validateCredentials(username, password)) {
+    return
+  }
+
+  return player.getAuthToken()
+}
