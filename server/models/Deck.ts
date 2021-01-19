@@ -33,3 +33,9 @@ export class Deck {
     return this.cards.splice(0, modifiedCount)
   }
 }
+
+// 1st player -> POST '/game' -> new Game(title) -> joining state
+// 2nd, 3rd ... players -> POST '/game/:id/join' -> Game connects player
+// 1st player -> POST '/game/:id/start' -> Game to betting state
+// all players -> POST 'game/:id/bet' -> Game checks that all bets are provided, gives all players and dealer cards and goes to 1st player turn
+// 1st, 2nd ... players ->
