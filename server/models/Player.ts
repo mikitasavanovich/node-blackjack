@@ -19,4 +19,16 @@ export class Player {
   public validateCredentials (username: string, password: string): boolean {
     return this.username === username && this.password === password
   }
+
+  public setWallet (amount: number) {
+    this.wallet = amount
+  }
+
+  public serialize () {
+    return {
+      id: this.id,
+      username: this.username,
+      wallet: this.wallet
+    }
+  }
 }

@@ -1,8 +1,13 @@
 import { Context } from 'koa'
 import * as authService from '../services/auth'
 
+interface ICredentials {
+  username: string;
+  password: string;
+}
+
 export const signUp = (ctx: Context) => {
-  const { username, password } = ctx.request.body
+  const { username, password } = ctx.request.body as ICredentials
 
   if (!username || !password) {
     ctx.throw(400)
@@ -20,7 +25,7 @@ export const signUp = (ctx: Context) => {
 }
 
 export const signIn = (ctx: Context) => {
-  const { username, password } = ctx.request.body
+  const { username, password } = ctx.request.body as ICredentials
 
   if (!username || !password) {
     ctx.throw(401)
