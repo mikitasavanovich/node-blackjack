@@ -67,3 +67,10 @@ export const finishTurn = (game: Game, player: Player) => {
   player.stay()
   return game
 }
+
+export const leaveGame = (game: Game, user: User) => {
+  const leaver = game.removePlayer(user)
+  user.addToWallet(leaver.buyInSum)
+
+  return game
+}

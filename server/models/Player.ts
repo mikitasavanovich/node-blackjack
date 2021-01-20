@@ -35,8 +35,22 @@ export class Player extends WithHand {
     this.bet = 0
   }
 
+  public win (rate: number) {
+    this.state = PLAYER_STATE.WON
+    this.buyInSum += this.bet * rate
+    this.bet = 0
+  }
+
   public plays () {
     return this.state === PLAYER_STATE.PLAYS
+  }
+
+  public hasLost () {
+    return this.state === PLAYER_STATE.LOST
+  }
+
+  public hasWon () {
+    return this.state === PLAYER_STATE.WON
   }
 
   public hasBet (sum: number) {

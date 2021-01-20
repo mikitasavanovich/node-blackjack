@@ -41,6 +41,11 @@ export const CARD_SCORES = {
 export const GAME_TIMEOUT_MS = 30000
 export const GAME_BUY_IN_SUM = 1
 export const GAME_MAX_VALUE = 21
+export enum WINNING_RATE {
+  USUAL = 2,
+  NATURAL = 1.5,
+  PUSH = 1
+}
 
 export enum GAME_STATE {
   JOINING = 'JOINING',
@@ -61,5 +66,7 @@ export enum PLAYER_STATE {
 export enum GAME_EVENTS {
   BET = 'bet',
   DRAW = 'draw',
-  STAY = 'stay'
+  STAY = 'stay',
+  FINISH = 'finish',
+  LEAVE = 'leave'
 }

@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import shortid from 'shortid'
 import { Deck } from './Deck'
 import { Player } from './Player'
-import { GAME_TIMEOUT_MS, GAME_STATE, GAME_EVENTS, GAME_MAX_VALUE } from '../constants'
+import { GAME_TIMEOUT_MS, GAME_STATE, GAME_EVENTS, GAME_MAX_VALUE, WINNING_RATE } from '../constants'
 
 import { User } from './User'
 import { Dealer } from './Dealer'
@@ -27,23 +27,30 @@ export class Game {
       }
     })
 
-    eventEmitter.on(GAME_EVENTS.DRAW, (player: Player) => {
+    eventEmitter.on(GAME_EVENTS.DRAW, (player: Player | Dealer) => {
       const cards = this.deck.getCards(1)
       player.addToHand(cards)
 
-      if (player.getHandScore() >= GAME_MAX_VALUE) {
-        player.endTurn()
-        this.setNextPlayerOrDealer(player)
-      }
+      if (player instanceof Player) {
+        if (player.getHandScore() >= GAME_MAX_VALUE) {
+          player.endTurn()
+          this.setNextPlayerOrDealer(player)
+        }
 
-      if (player.getHandScore() > GAME_MAX_VALUE) {
-        player.lose()
+        if (player.getHandScore() > GAME_MAX_VALUE) {
+          player.lose()
+        }
       }
     })
 
     eventEmitter.on(GAME_EVENTS.STAY, (player: Player) => {
       player.endTurn()
       this.setNextPlayerOrDealer(player)
+    })
+
+    eventEmitter.on(GAME_EVENTS.FINISH, () => {
+      this.state = GAME_STATE.FINISHED
+      this.calculateResults()
     })
 
     return eventEmitter
@@ -58,9 +65,21 @@ export class Game {
     this.players.push(player)
   }
 
+  public removePlayer (user: User) {
+    const player = this.getPlayer(user)
+
+    if (player.plays()) {
+      this.setNextPlayerOrDealer(player)
+    }
+
+    this.players = this.players.filter(p => p.userId !== player.userId)
+
+    return player
+  }
+
   public start () {
     this.deck = new Deck()
-    this.dealer = new Dealer()
+    this.dealer = new Dealer(this.gameEventEmitter)
     this.players.forEach(player => player.clearState())
     this.state = GAME_STATE.WAITING_FOR_BETS
   }
@@ -80,10 +99,30 @@ export class Game {
     const playerIndex = this.players.indexOf(lastPlayer)
 
     if (playerIndex === this.players.length - 1) {
-      this.state = GAME_STATE.DEALER_TURN
+      if (this.players.every(player => player.hasLost())) {
+        this.state = GAME_STATE.FINISHED
+      } else {
+        this.state = GAME_STATE.DEALER_TURN
+      }
     } else {
       this.players[playerIndex + 1].startTurn()
     }
+  }
+
+  public calculateResults () {
+    const dealerScore = this.dealer.getHandScore()
+    const idlePlayers = this.players.filter(player => !player.hasLost() && !player.hasWon())
+
+    idlePlayers.forEach(player => {
+      const playerScore = player.getHandScore()
+      if (dealerScore >= GAME_MAX_VALUE || dealerScore < playerScore) {
+        player.win(WINNING_RATE.USUAL)
+      } else if (dealerScore === playerScore) {
+        player.win(WINNING_RATE.PUSH)
+      } else {
+        player.lose()
+      }
+    })
   }
 
   public serialize () {
