@@ -1,15 +1,14 @@
 import shortid from 'shortid'
-import { EventEmitter } from 'events'
 import { WithHand } from './WithHand'
-import { GAME_EVENTS } from '../constants'
+import { IGameHandler } from '../interfaces'
 
 export class Dealer extends WithHand {
   id = shortid.generate()
-  gameEventEmitter: EventEmitter
+  gameHandler: IGameHandler
 
-  constructor (eventEmitter: EventEmitter) {
+  constructor (gameHandler: IGameHandler) {
     super()
-    this.gameEventEmitter = eventEmitter
+    this.gameHandler = gameHandler
   }
 
   public play () {
@@ -17,10 +16,18 @@ export class Dealer extends WithHand {
 
     while (true) {
       if (this.getHandScore() >= 17) {
-        this.gameEventEmitter.emit(GAME_EVENTS.FINISH)
+        this.gameHandler.finish()
+        return
       } else {
-        this.gameEventEmitter.emit(GAME_EVENTS.DRAW)
+        this.gameHandler.draw(this)
       }
+    }
+  }
+
+  public serialize () {
+    return {
+      hand: this.hand.map(card => card.serialize()),
+      score: this.hasHiddenCards() ? 'hidden' : this.getHandScore()
     }
   }
 }

@@ -1,19 +1,19 @@
-import { EventEmitter } from 'events'
 import { WithHand } from './WithHand'
-import { PLAYER_STATE, GAME_BUY_IN_SUM, GAME_EVENTS } from '../constants'
 import { User } from './User'
+import { PLAYER_STATE, GAME_BUY_IN_SUM } from '../constants'
+import { IGameHandler } from '../interfaces'
 
 export class Player extends WithHand {
   userId: string;
   buyInSum: number = GAME_BUY_IN_SUM
   bet: number = 0;
   state = PLAYER_STATE.IDLE
-  gameEventEmitter: EventEmitter
+  gameHandler: IGameHandler
 
-  constructor (user: User, eventEmitter: EventEmitter) {
+  constructor (user: User, gameHandler: IGameHandler) {
     super()
     this.userId = user.id
-    this.gameEventEmitter = eventEmitter
+    this.gameHandler = gameHandler
   }
 
   public clearState () {
@@ -24,6 +24,10 @@ export class Player extends WithHand {
 
   public startTurn () {
     this.state = PLAYER_STATE.PLAYS
+  }
+
+  public waitForBet () {
+    this.state = PLAYER_STATE.BETTING
   }
 
   public endTurn () {
@@ -66,15 +70,15 @@ export class Player extends WithHand {
     this.bet = sum
     this.state = PLAYER_STATE.IDLE
 
-    this.gameEventEmitter.emit(GAME_EVENTS.BET)
+    this.gameHandler.bet()
   }
 
   public draw () {
-    this.gameEventEmitter.emit(GAME_EVENTS.DRAW, this)
+    this.gameHandler.draw(this)
   }
 
   public stay () {
-    this.gameEventEmitter.emit(GAME_EVENTS.STAY, this)
+    this.gameHandler.stay(this)
   }
 
   public serialize () {

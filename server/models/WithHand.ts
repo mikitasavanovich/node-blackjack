@@ -9,16 +9,28 @@ export class WithHand {
   }
 
   public getHandScore () {
-    const score = this.hand.reduce((result, card) => {
-      if (card.value === CARD_VALUE.ACE) {
-        return result + CARD_SCORES.ACE11 >= GAME_MAX_VALUE
-          ? CARD_SCORES.ACE1
-          : CARD_SCORES.ACE11
-      } else {
-        return result + CARD_SCORES[card.value]
+    let score = this.hand.reduce((result, card) =>
+      card.value === CARD_VALUE.ACE
+        ? result + CARD_SCORES.ACE11
+        : result + CARD_SCORES[card.value]
+    , 0)
+
+    if (score > GAME_MAX_VALUE) {
+      const hasAces = this.hand.some(card => card.value === CARD_VALUE.ACE)
+
+      if (hasAces) {
+        score = this.hand.reduce((result, card) =>
+          card.value === CARD_VALUE.ACE
+            ? result + CARD_SCORES.ACE1
+            : result + CARD_SCORES[card.value]
+        , 0)
       }
-    }, 0)
+    }
 
     return score
+  }
+
+  public hasHiddenCards () {
+    return this.hand.some(card => !card.visible)
   }
 }

@@ -62,11 +62,3 @@ export enum PLAYER_STATE {
   WON = 'WON',
   LOST = 'LOST'
 }
-
-export enum GAME_EVENTS {
-  BET = 'bet',
-  DRAW = 'draw',
-  STAY = 'stay',
-  FINISH = 'finish',
-  LEAVE = 'leave'
-}

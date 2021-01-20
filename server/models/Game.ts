@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events'
 import shortid from 'shortid'
 import { Deck } from './Deck'
 import { Player } from './Player'
-import { GAME_TIMEOUT_MS, GAME_STATE, GAME_EVENTS, GAME_MAX_VALUE, WINNING_RATE } from '../constants'
+import { GAME_TIMEOUT_MS, GAME_STATE, GAME_MAX_VALUE, WINNING_RATE } from '../constants'
 
 import { User } from './User'
 import { Dealer } from './Dealer'
+import { IGameHandler } from '../interfaces'
 
 export class Game {
   id = shortid.generate()
@@ -14,53 +14,48 @@ export class Game {
   deck: Deck;
   timeoutMS = GAME_TIMEOUT_MS
   state: GAME_STATE = GAME_STATE.JOINING
-  gameEventEmitter: EventEmitter = this.initEventEmitter()
+  gameHandler: IGameHandler = this.initEventEmitter()
   timer: ReturnType<typeof setTimeout> | null
 
   private initEventEmitter () {
-    const eventEmitter = new EventEmitter()
+    return {
+      bet: () => {
+        if (this.players.every(player => player.bet > 0)) {
+          this.setStartingHands()
+          this.state = GAME_STATE.PLAYER_TURN
+          this.players[0].startTurn()
 
-    eventEmitter.on(GAME_EVENTS.BET, () => {
-      if (this.players.every(player => player.bet > 0)) {
-        this.setStartingHands()
-        this.state = GAME_STATE.PLAYER_TURN
-        this.players[0].startTurn()
-
-        clearTimeout(this.timer)
-        this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
-      }
-    })
-
-    eventEmitter.on(GAME_EVENTS.DRAW, (player: Player | Dealer) => {
-      const cards = this.deck.getCards(1)
-      player.addToHand(cards)
-
-      if (player instanceof Player) {
-        if (player.getHandScore() >= GAME_MAX_VALUE) {
-          player.endTurn()
-          this.setNextPlayerOrDealer(player)
+          clearTimeout(this.timer)
+          this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
         }
+      },
+      draw: (player: Player | Dealer) => {
+        const cards = this.deck.getCards(1)
+        player.addToHand(cards)
 
-        if (player.getHandScore() > GAME_MAX_VALUE) {
-          player.lose()
+        if (player instanceof Player) {
+          if (player.getHandScore() >= GAME_MAX_VALUE) {
+            player.endTurn()
+            this.setNextPlayerOrDealer(player)
+          }
+
+          if (player.getHandScore() > GAME_MAX_VALUE) {
+            player.lose()
+          }
+
+          clearTimeout(this.timer)
+          this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
         }
-
-        clearTimeout(this.timer)
-        this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
+      },
+      stay: (player: Player) => {
+        player.endTurn()
+        this.setNextPlayerOrDealer(player)
+      },
+      finish: () => {
+        this.state = GAME_STATE.FINISHED
+        this.calculateResults()
       }
-    })
-
-    eventEmitter.on(GAME_EVENTS.STAY, (player: Player) => {
-      player.endTurn()
-      this.setNextPlayerOrDealer(player)
-    })
-
-    eventEmitter.on(GAME_EVENTS.FINISH, () => {
-      this.state = GAME_STATE.FINISHED
-      this.calculateResults()
-    })
-
-    return eventEmitter
+    }
   }
 
   public getPlayer (user: User) {
@@ -68,7 +63,7 @@ export class Game {
   }
 
   public addPlayer (user: User) {
-    const player = new Player(user, this.gameEventEmitter)
+    const player = new Player(user, this.gameHandler)
     this.players.push(player)
   }
 
@@ -86,8 +81,11 @@ export class Game {
 
   public start () {
     this.deck = new Deck()
-    this.dealer = new Dealer(this.gameEventEmitter)
-    this.players.forEach(player => player.clearState())
+    this.dealer = new Dealer(this.gameHandler)
+    this.players.forEach(player => {
+      player.clearState()
+      player.waitForBet()
+    })
     this.state = GAME_STATE.WAITING_FOR_BETS
     this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
   }
@@ -112,10 +110,11 @@ export class Game {
         this.state = GAME_STATE.FINISHED
       } else {
         this.state = GAME_STATE.DEALER_TURN
+        this.dealer.play()
       }
     } else {
       const nextPlayer =
-        this.players.slice(playerIndex)
+        this.players.slice(playerIndex + 1)
           .find(player => !player.hasWon() && !player.hasLost())
 
       nextPlayer.startTurn()
@@ -150,7 +149,7 @@ export class Game {
         return
       case GAME_STATE.PLAYER_TURN: {
         const afkPlayer = this.players.find(player => player.plays())
-        this.gameEventEmitter.emit(GAME_EVENTS.STAY, afkPlayer)
+        this.gameHandler.stay(afkPlayer)
       }
         break
       default:
@@ -162,6 +161,7 @@ export class Game {
     return {
       id: this.id,
       players: this.players.map(player => player.serialize()),
+      dealer: this.dealer ? this.dealer.serialize() : null,
       deck: this.deck ? this.deck.serialize() : null,
       state: this.state
     }

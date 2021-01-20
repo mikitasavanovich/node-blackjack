@@ -26,7 +26,7 @@ export const getGames = (ctx: Context) => {
 
   const games = gameService.getGames({ state })
 
-  ctx.body = games
+  ctx.body = games.map(game => game.serialize())
 }
 
 export const joinGame = async (ctx: Context) => {
