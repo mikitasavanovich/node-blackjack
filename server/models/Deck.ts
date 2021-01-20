@@ -10,6 +10,8 @@ export class Deck {
         (result2, suit) => result2.concat(new Card(suit, value)), []
       )), []
     )
+
+    this.shuffle()
   }
 
   public shuffle () {

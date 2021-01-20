@@ -1,16 +1,16 @@
 import { BasicStrategy } from 'passport-http'
 import passport from 'koa-passport'
-import * as playerData from './data-access/player'
+import * as userData from './data-access/user'
 
 passport.use(new BasicStrategy((username: string, password: string, done) => {
   try {
-    const player = playerData.findPlayer({ username })
+    const user = userData.findUser({ username })
 
-    if (!player || !player.validateCredentials(username, password)) {
+    if (!user || !user.validateCredentials(username, password)) {
       return done(null, false)
     }
 
-    return done(null, player)
+    return done(null, user)
   } catch (error) {
     done(error)
   }

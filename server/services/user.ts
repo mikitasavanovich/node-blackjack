@@ -1,7 +1,7 @@
-import { Player } from '../models/Player'
+import { User } from '../models/User'
 
-export const addToWallet = (sum: number, player: Player) => {
-  player.addToWallet(sum)
+export const addToWallet = (sum: number, user: User) => {
+  user.addToWallet(sum)
 
-  return true
+  return user
 }

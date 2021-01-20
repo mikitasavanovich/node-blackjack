@@ -1,27 +1,27 @@
-import * as playerData from '../data-access/player'
+import * as userData from '../data-access/user'
 
 export const signUp = (username: string, password: string): string | null => {
-  const existingUser = playerData.findPlayer({ username })
+  const existingUser = userData.findUser({ username })
 
   if (existingUser) {
     return
   }
 
-  const player = playerData.createPlayer(username, password)
+  const user = userData.createUser(username, password)
 
-  return player.getAuthToken()
+  return user.getAuthToken()
 }
 
 export const signIn = (username: string, password: string): string | null => {
-  const player = playerData.findPlayer({ username })
+  const user = userData.findUser({ username })
 
-  if (!player) {
+  if (!user) {
     return
   }
 
-  if (!player.validateCredentials(username, password)) {
+  if (!user.validateCredentials(username, password)) {
     return
   }
 
-  return player.getAuthToken()
+  return user.getAuthToken()
 }

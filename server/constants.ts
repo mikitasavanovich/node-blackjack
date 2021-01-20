@@ -22,18 +22,24 @@ export enum CARD_VALUE {
 }
 
 export const GAME_TIMEOUT_MS = 30000
+export const GAME_BUY_IN_SUM = 1
 
 export enum GAME_STATE {
   JOINING = 'JOINING',
-  STARTING = 'STARTING',
+  WAITING_FOR_BETS = 'WAITING_FOR_BETS',
   PLAYER_TURN = 'PLAYER_TURN',
   DEALER_TURN = 'DEALER_TURN',
   FINISHED = 'FINISHED'
 }
 
 export enum PLAYER_STATE {
-  HAS_TURN = 'HAS_TURN',
-  WAIT = 'WAIT',
-  HAS_LOST = 'HAS_LOST',
-  HAS_WON = 'HAS_WON'
+  IDLE = 'IDLE',
+  BETTING = 'BETTING',
+  PLAYS = 'PLAYS',
+  WON = 'WON',
+  LOST = 'LOST'
+}
+
+export enum GAME_EVENTS {
+  BET = 'bet'
 }

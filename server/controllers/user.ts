@@ -1,9 +1,9 @@
 import { Context } from 'koa'
-import { Player } from '../models/Player'
+import { User } from '../models/User'
 import * as userService from '../services/user'
 
 export const getUserInfo = (ctx: Context) => {
-  const player = ctx.state.user as Player
+  const player = ctx.state.user as User
 
   ctx.body = player.serialize()
 }
@@ -15,9 +15,9 @@ export const addToWallet = (ctx: Context) => {
     ctx.throw(400)
   }
 
-  const player = ctx.state.user as Player
+  const player = ctx.state.user as User
 
-  userService.addToWallet(sum, player)
+  const updatedUser = userService.addToWallet(sum, player)
 
-  ctx.status = 200
+  ctx.body = updatedUser.serialize()
 }

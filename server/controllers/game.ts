@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import { GAME_STATE } from '../constants'
-import { Player } from '../models/Player'
+import { User } from '../models/User'
+import { Game } from '../models/Game'
 import * as gameService from '../services/game'
 
 interface IGameFilters {
@@ -8,9 +9,13 @@ interface IGameFilters {
 }
 
 export const createGame = (ctx: Context) => {
-  const player = ctx.state.user as Player
+  const user = ctx.state.user as User
 
-  const game = gameService.createGame(player)
+  const game = gameService.createGame(user)
+
+  if (!game) {
+    ctx.throw(400)
+  }
 
   ctx.body = game.serialize()
 }
@@ -23,15 +28,37 @@ export const getGames = (ctx: Context) => {
   ctx.body = games
 }
 
-export const joinGame = (ctx: Context) => {
-  const player = ctx.state.user as Player
-  const gameId: string = ctx.params.id
+export const joinGame = async (ctx: Context) => {
+  const user = ctx.state.user as User
+  const game = ctx.state.game as Game
 
-  const updatedGame = gameService.addPlayerToGame(gameId, player)
+  const updatedGame = gameService.addPlayerToGame(game, user)
 
   if (updatedGame === null) {
     ctx.throw(404)
   } else if (updatedGame === false) {
+    ctx.throw(400)
+  }
+
+  ctx.body = updatedGame.serialize()
+}
+
+export const startGame = (ctx: Context) => {
+  const game = ctx.state.game as Game
+
+  const updatedGame = gameService.startGame(game)
+
+  ctx.body = updatedGame.serialize()
+}
+
+export const placeBet = (ctx: Context) => {
+  const user = ctx.state.user as User
+  const game = ctx.state.game as Game
+  const { sum } = ctx.request.body as { sum: number }
+
+  const updatedGame = gameService.placeBet(game, user, sum)
+
+  if (!updatedGame) {
     ctx.throw(400)
   }
 

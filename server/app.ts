@@ -7,14 +7,14 @@ require('./passport')
 
 const app = new Koa()
 
-// app.use(async (ctx, next) => {
-//   try {
-//     await next()
-//   } catch (error) {
-//     console.error()
-//     ctx.throw(500)
-//   }
-// })
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (error) {
+    console.error(error)
+    ctx.status = error.status || 500
+  }
+})
 
 app.use(bodyParser())
 app.use(passport.initialize())

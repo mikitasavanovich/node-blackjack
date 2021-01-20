@@ -1,38 +1,40 @@
-import shortid from 'shortid'
+import { EventEmitter } from 'events'
+import { Card } from './Card'
+import { PLAYER_STATE, GAME_BUY_IN_SUM, GAME_EVENTS } from '../constants'
+import { User } from './User'
 
 export class Player {
-  id: string;
-  username: string;
-  password: string;
-  wallet: number = 0;
+  userId: string;
+  buyInSum: number = GAME_BUY_IN_SUM
+  hand: Card[] = [];
+  bet: number = 0;
+  state = PLAYER_STATE.IDLE
+  gameEventEmitter: EventEmitter
 
-  constructor (username: string, password: string) {
-    this.id = shortid.generate()
-    this.username = username
-    this.password = password
+  constructor (user: User, eventEmitter: EventEmitter) {
+    this.userId = user.id
+    this.gameEventEmitter = eventEmitter
   }
 
-  public getAuthToken (): string {
-    return Buffer.from(`${this.username}:${this.password}`).toString('base64')
+  public clearState () {
+    this.hand = []
+    this.bet = 0
+    this.state = PLAYER_STATE.IDLE
   }
 
-  public validateCredentials (username: string, password: string): boolean {
-    return this.username === username && this.password === password
+  public startTurn () {
+    this.state = PLAYER_STATE.PLAYS
   }
 
-  public setWallet (amount: number) {
-    this.wallet = amount
+  public hasBet (sum: number) {
+    return this.buyInSum >= sum
   }
 
-  public serialize () {
-    return {
-      id: this.id,
-      username: this.username,
-      wallet: this.wallet
-    }
-  }
+  public placeBet (sum: number) {
+    this.buyInSum -= sum
+    this.bet = sum
+    this.state = PLAYER_STATE.IDLE
 
-  public addToWallet (sum: number) {
-    this.wallet += sum
+    this.gameEventEmitter.emit(GAME_EVENTS.BET)
   }
 }
