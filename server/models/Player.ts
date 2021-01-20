@@ -45,6 +45,10 @@ export class Player extends WithHand {
     return this.state === PLAYER_STATE.PLAYS
   }
 
+  public betting () {
+    return this.state === PLAYER_STATE.BETTING
+  }
+
   public hasLost () {
     return this.state === PLAYER_STATE.LOST
   }

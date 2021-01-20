@@ -15,6 +15,7 @@ export class Game {
   timeoutMS = GAME_TIMEOUT_MS
   state: GAME_STATE = GAME_STATE.JOINING
   gameEventEmitter: EventEmitter = this.initEventEmitter()
+  timer: ReturnType<typeof setTimeout> | null
 
   private initEventEmitter () {
     const eventEmitter = new EventEmitter()
@@ -24,6 +25,9 @@ export class Game {
         this.setStartingHands()
         this.state = GAME_STATE.PLAYER_TURN
         this.players[0].startTurn()
+
+        clearTimeout(this.timer)
+        this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
       }
     })
 
@@ -40,6 +44,9 @@ export class Game {
         if (player.getHandScore() > GAME_MAX_VALUE) {
           player.lose()
         }
+
+        clearTimeout(this.timer)
+        this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
       }
     })
 
@@ -82,6 +89,7 @@ export class Game {
     this.dealer = new Dealer(this.gameEventEmitter)
     this.players.forEach(player => player.clearState())
     this.state = GAME_STATE.WAITING_FOR_BETS
+    this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
   }
 
   public setStartingHands () {
@@ -97,6 +105,7 @@ export class Game {
 
   public setNextPlayerOrDealer (lastPlayer: Player) {
     const playerIndex = this.players.indexOf(lastPlayer)
+    clearTimeout(this.timer)
 
     if (playerIndex === this.players.length - 1) {
       if (this.players.every(player => player.hasLost())) {
@@ -105,7 +114,12 @@ export class Game {
         this.state = GAME_STATE.DEALER_TURN
       }
     } else {
-      this.players[playerIndex + 1].startTurn()
+      const nextPlayer =
+        this.players.slice(playerIndex)
+          .find(player => !player.hasWon() && !player.hasLost())
+
+      nextPlayer.startTurn()
+      this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
     }
   }
 
@@ -125,10 +139,29 @@ export class Game {
     })
   }
 
+  private handleExceededTimeout = () => {
+    switch (this.state) {
+      case GAME_STATE.WAITING_FOR_BETS:
+        this.players.forEach(player => {
+          if (player.betting()) {
+            player.lose()
+          }
+        })
+        return
+      case GAME_STATE.PLAYER_TURN: {
+        const afkPlayer = this.players.find(player => player.plays())
+        this.gameEventEmitter.emit(GAME_EVENTS.STAY, afkPlayer)
+      }
+        break
+      default:
+    }
+    this.timer = setTimeout(this.handleExceededTimeout, GAME_TIMEOUT_MS)
+  }
+
   public serialize () {
     return {
       id: this.id,
-      players: this.players,
+      players: this.players.map(player => player.serialize()),
       deck: this.deck ? this.deck.serialize() : null,
       state: this.state
     }

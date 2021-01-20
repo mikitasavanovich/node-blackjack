@@ -38,7 +38,7 @@ export const CARD_SCORES = {
   ACE11: 11
 }
 
-export const GAME_TIMEOUT_MS = 30000
+export const GAME_TIMEOUT_MS = 3000000
 export const GAME_BUY_IN_SUM = 1
 export const GAME_MAX_VALUE = 21
 export enum WINNING_RATE {
