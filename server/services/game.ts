@@ -2,6 +2,7 @@ import { User } from '../models/User'
 import { Game } from '../models/Game'
 import * as gameData from '../data-access/game'
 import { GAME_STATE, GAME_BUY_IN_SUM } from '../constants'
+import { Player } from '../models/Player'
 
 export const createGame = (user: User) => {
   if (!user.hasSum(GAME_BUY_IN_SUM)) {
@@ -46,5 +47,23 @@ export const placeBet = (game: Game, user: User, sum: number) => {
 
   player.placeBet(sum)
 
+  return game
+}
+
+export const drawCard = (game: Game, player: Player) => {
+  if (!player.plays()) {
+    return
+  }
+
+  player.draw()
+  return game
+}
+
+export const finishTurn = (game: Game, player: Player) => {
+  if (!player.plays()) {
+    return
+  }
+
+  player.stay()
   return game
 }

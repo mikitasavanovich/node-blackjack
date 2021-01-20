@@ -21,8 +21,26 @@ export enum CARD_VALUE {
   ACE = 'ACE'
 }
 
+export const CARD_SCORES = {
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  10: 10,
+  JACK: 10,
+  QUEEN: 10,
+  KING: 10,
+  ACE1: 1,
+  ACE11: 11
+}
+
 export const GAME_TIMEOUT_MS = 30000
 export const GAME_BUY_IN_SUM = 1
+export const GAME_MAX_VALUE = 21
 
 export enum GAME_STATE {
   JOINING = 'JOINING',
@@ -41,5 +59,7 @@ export enum PLAYER_STATE {
 }
 
 export enum GAME_EVENTS {
-  BET = 'bet'
+  BET = 'bet',
+  DRAW = 'draw',
+  STAY = 'stay'
 }

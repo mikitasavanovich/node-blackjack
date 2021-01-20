@@ -2,6 +2,7 @@ import { Context } from 'koa'
 import { GAME_STATE } from '../constants'
 import { User } from '../models/User'
 import { Game } from '../models/Game'
+import { Player } from '../models/Player'
 import * as gameService from '../services/game'
 
 interface IGameFilters {
@@ -57,6 +58,30 @@ export const placeBet = (ctx: Context) => {
   const { sum } = ctx.request.body as { sum: number }
 
   const updatedGame = gameService.placeBet(game, user, sum)
+
+  if (!updatedGame) {
+    ctx.throw(400)
+  }
+
+  ctx.body = updatedGame.serialize()
+}
+
+export const drawCard = async (ctx: Context) => {
+  const { player, game } = ctx.state as { player: Player, game: Game }
+
+  const updatedGame = gameService.drawCard(game, player)
+
+  if (!updatedGame) {
+    ctx.throw(400)
+  }
+
+  ctx.body = updatedGame.serialize()
+}
+
+export const stay = async (ctx: Context) => {
+  const { player, game } = ctx.state as { player: Player, game: Game }
+
+  const updatedGame = gameService.finishTurn(game, player)
 
   if (!updatedGame) {
     ctx.throw(400)

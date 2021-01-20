@@ -40,5 +40,19 @@ router.post(
   policy.hasGameAccess,
   gameController.placeBet
 )
+router.post(
+  '/games/:id/hit',
+  passport.authenticate('basic', { session: false }),
+  validation.gameExists,
+  policy.hasGameAccess,
+  gameController.drawCard
+)
+router.post(
+  '/games/:id/stay',
+  passport.authenticate('basic', { session: false }),
+  validation.gameExists,
+  policy.hasGameAccess,
+  gameController.stay
+)
 
 export default router

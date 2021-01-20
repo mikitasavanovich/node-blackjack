@@ -1,7 +1,6 @@
 import shortid from 'shortid'
-import { Card } from './Card'
+import { WithHand } from './WithHand'
 
-export class Dealer {
+export class Dealer extends WithHand {
   id = shortid.generate()
-  hand: Card[] = [];
 }

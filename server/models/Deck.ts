@@ -29,10 +29,8 @@ export class Deck {
     return this.cards.length
   }
 
-  public getCards (count) {
-    const modifiedCount = this.cards.length < count ? this.cards.length : count
-
-    return this.cards.splice(0, modifiedCount)
+  public getCards (count: number) {
+    return this.cards.splice(0, count)
   }
 
   public serialize () {
@@ -41,9 +39,3 @@ export class Deck {
     }
   }
 }
-
-// 1st player -> POST '/game' -> new Game(title) -> joining state
-// 2nd, 3rd ... players -> POST '/game/:id/join' -> Game connects player
-// 1st player -> POST '/game/:id/start' -> Game to betting state
-// all players -> POST 'game/:id/bet' -> Game checks that all bets are provided, gives all players and dealer cards and goes to 1st player turn
-// 1st, 2nd ... players ->

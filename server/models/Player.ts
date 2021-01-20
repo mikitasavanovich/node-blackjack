@@ -1,17 +1,17 @@
 import { EventEmitter } from 'events'
-import { Card } from './Card'
+import { WithHand } from './WithHand'
 import { PLAYER_STATE, GAME_BUY_IN_SUM, GAME_EVENTS } from '../constants'
 import { User } from './User'
 
-export class Player {
+export class Player extends WithHand {
   userId: string;
   buyInSum: number = GAME_BUY_IN_SUM
-  hand: Card[] = [];
   bet: number = 0;
   state = PLAYER_STATE.IDLE
   gameEventEmitter: EventEmitter
 
   constructor (user: User, eventEmitter: EventEmitter) {
+    super()
     this.userId = user.id
     this.gameEventEmitter = eventEmitter
   }
@@ -26,6 +26,19 @@ export class Player {
     this.state = PLAYER_STATE.PLAYS
   }
 
+  public endTurn () {
+    this.state = PLAYER_STATE.IDLE
+  }
+
+  public lose () {
+    this.state = PLAYER_STATE.LOST
+    this.bet = 0
+  }
+
+  public plays () {
+    return this.state === PLAYER_STATE.PLAYS
+  }
+
   public hasBet (sum: number) {
     return this.buyInSum >= sum
   }
@@ -36,5 +49,24 @@ export class Player {
     this.state = PLAYER_STATE.IDLE
 
     this.gameEventEmitter.emit(GAME_EVENTS.BET)
+  }
+
+  public draw () {
+    this.gameEventEmitter.emit(GAME_EVENTS.DRAW, this)
+  }
+
+  public stay () {
+    this.gameEventEmitter.emit(GAME_EVENTS.STAY, this)
+  }
+
+  public serialize () {
+    return {
+      userId: this.userId,
+      buyInSum: this.buyInSum,
+      bet: this.bet,
+      state: this.state,
+      hand: this.hand.map(card => card.serialize()),
+      score: this.getHandScore()
+    }
   }
 }
