@@ -1,12 +1,12 @@
 import { BasicStrategy } from 'passport-http'
 import passport from 'koa-passport'
-import * as userData from './data-access/user'
+import * as userService from './services/auth'
 
 passport.use(new BasicStrategy((username: string, password: string, done) => {
   try {
-    const user = userData.findUser({ username })
+    const user = userService.validateUser(username, password)
 
-    if (!user || !user.validateCredentials(username, password)) {
+    if (!user) {
       return done(null, false)
     }
 

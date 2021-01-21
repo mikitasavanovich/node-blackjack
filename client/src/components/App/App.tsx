@@ -1,12 +1,22 @@
 import React from 'react';
-import { Game } from '../Game/Game'
+import io from 'socket.io-client'
 import './App.css';
 
 function App() {
+  React.useEffect(() => {
+    const socket = io('http://localhost:4001', {
+      transportOptions: {
+        polling: {
+          extraHeaders: {
+            Authorization: 'Basic bmlraXRhMzoxMTExMTE='
+          }
+        }
+      }
+    })
+  }, [])
+
   return (
-    <div className='app'>
-      <Game />
-    </div>
+    <div>Hello</div>
   );
 }
 

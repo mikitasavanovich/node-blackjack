@@ -12,7 +12,15 @@ export const signUp = (username: string, password: string): string | null => {
   return user.getAuthToken()
 }
 
-export const signIn = (username: string, password: string): string | null => {
+export const signIn = (username: string, password: string) => {
+  const user = validateUser(username, password)
+
+  if (user) {
+    return user.getAuthToken()
+  }
+}
+
+export const validateUser = (username: string, password: string) => {
   const user = userData.findUser({ username })
 
   if (!user) {
@@ -23,5 +31,5 @@ export const signIn = (username: string, password: string): string | null => {
     return
   }
 
-  return user.getAuthToken()
+  return user
 }

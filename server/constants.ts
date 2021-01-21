@@ -62,3 +62,14 @@ export enum PLAYER_STATE {
   WON = 'WON',
   LOST = 'LOST'
 }
+
+export enum GAME_EVENT {
+  JOIN = 'game:join',
+  START = 'game:start',
+  BET = 'game:bet',
+  HIT = 'game:hit',
+  STAY = 'game:stay',
+  FAIL = 'game:fail',
+  UPDATE = 'game:update',
+  LEAVE = 'game:leave'
+}

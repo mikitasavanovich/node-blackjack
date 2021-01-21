@@ -58,6 +58,10 @@ export class Game {
     }
   }
 
+  public hasState (state: GAME_STATE) {
+    return this.state === state
+  }
+
   public getPlayer (user: User) {
     return this.players.find(player => player.userId === user.id)
   }

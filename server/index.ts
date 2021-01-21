@@ -1,8 +1,8 @@
 import http from 'http'
-import { Server } from 'socket.io'
+import socket from './socket'
 import app from './app'
 
 const httpServer = http.createServer(app.callback())
-const io = new Server(httpServer)
+socket(httpServer)
 
 httpServer.listen(4001, () => console.log('listening on 4001'))

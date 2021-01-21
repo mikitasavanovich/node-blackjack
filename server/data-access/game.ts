@@ -10,7 +10,7 @@ export const createGame = () => {
   return game
 }
 
-export const findGame = (options: { id?: string }) => {
+export const findGame = (options: { id?: string, userId?: string }) => {
   const game = games.find(game =>
     Object.entries(options).every(
       ([key, value]) => !value || (game[key] && game[key] === value)
