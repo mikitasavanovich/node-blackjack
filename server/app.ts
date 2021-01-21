@@ -2,6 +2,7 @@ import Koa from 'koa'
 import router from './router'
 import bodyParser from 'koa-bodyparser'
 import passport from 'koa-passport'
+import cors from '@koa/cors'
 
 require('./passport')
 
@@ -16,6 +17,9 @@ app.use(async (ctx, next) => {
   }
 })
 
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
 app.use(bodyParser())
 app.use(passport.initialize())
 app.use(router.routes())
