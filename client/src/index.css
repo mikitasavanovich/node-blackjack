@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-h3, ul {
+h3, h4, ul {
   margin: 0;
   padding: 0;
 }

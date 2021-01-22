@@ -4,7 +4,7 @@ export class User {
   id: string;
   username: string;
   password: string;
-  wallet: number = 0;
+  wallet: number = 15;
 
   constructor (username: string, password: string) {
     this.id = shortid.generate()

@@ -4,7 +4,7 @@ import { IUserInfo } from '../../interfaces'
 import './Profile.css'
 
 interface IProfileProps {
-  children: React.ReactNode
+  children: JSX.Element
 }
 
 function Profile (props: IProfileProps) {
@@ -19,6 +19,8 @@ function Profile (props: IProfileProps) {
     fetchUserInfo()
   }, [])
 
+  const child = React.cloneElement(props.children, { userInfo })
+
   return (
     <div className='profile'>
       <div className='profile__header'>
@@ -30,14 +32,14 @@ function Profile (props: IProfileProps) {
           </>
         )}
       </div>
-      {props.children}
+      {child}
     </div>
   )
 }
 
 export default Profile
 
-export const withProfile = (Component: () => JSX.Element) => () => (
+export const withProfile = (Component: (props: any) => JSX.Element | null) => () => (
   <Profile>
     <Component />
   </Profile>

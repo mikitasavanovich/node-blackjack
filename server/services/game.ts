@@ -70,7 +70,7 @@ export const checkGameExists = (gameId: string): ServiceResponse<Game> => {
 }
 
 export const getUserGame = (user: User) => {
-  const game = gameData.findGame({ userId: user.id })
+  const game = gameData.findGameByPlayers({ userId: user.id })
   return game
 }
 
@@ -102,7 +102,7 @@ export const validateAccessToGame = ({
     case GAME_EVENT.START:
       if (!player) {
         return { success: false, message: 'You are not a member of this game' }
-      } else if (!game.hasState(GAME_STATE.JOINING) || !game.hasState(GAME_STATE.FINISHED)) {
+      } else if (!game.hasState(GAME_STATE.JOINING) && !game.hasState(GAME_STATE.FINISHED)) {
         return { success: false, message: 'This game cannot be started' }
       }
       break

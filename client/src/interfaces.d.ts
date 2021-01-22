@@ -3,16 +3,27 @@ export interface IGame {
   id: string;
   players: IPlayer[];
   state: GAME_STATE;
+  dealer: IDealer;
 }
 
+export interface ICard {
+  suit: string;
+  value: string;
+  visible: boolean;
+}
 export interface IPlayer {
   userId: string;
   buyInSum: number;
   bet: number;
   state: PLAYER_STATE;
-  score: 0;
+  hand: ICard[];
+  score: number;
 }
 
+export interface IDealer {
+  hand: ICard[];
+  score: number | string;
+}
 export interface IUserInfo {
   id: string;
   username: string;

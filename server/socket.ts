@@ -7,27 +7,6 @@ import { ExtendedSocket, SocketGamePayload } from './interfaces'
 import { User } from './models/User'
 import { Game } from './models/Game'
 
-// const validateGameAndAccessToIt = (data: { gameId: string, user: User, event: GAME_EVENT, betSum?: number }) => {
-//   const gameExistsResult = gameService.checkGameExists(data.gameId)
-
-//   if (!gameExistsResult.success) {
-//     return gameExistsResult
-//   }
-
-//   const gameAccessResult = gameService.validateAccessToGame({
-//     game: gameExistsResult.data,
-//     user: data.user,
-//     event: data.event,
-//     payload: { betSum: data.betSum }
-//   })
-
-//   if (!gameAccessResult.success) {
-//     return gameAccessResult
-//   }
-
-//   return gameExistsResult
-// }
-
 const validateGameAndAccessToIt = ({
   socket,
   event,
@@ -93,6 +72,12 @@ export default (httpServer: http.Server) => {
   io.on('connection', (socket: ExtendedSocket) => {
     const { user } = socket
 
+    const runningGame = gameService.getUserGame(user)
+    if (runningGame) {
+      socket.join(runningGame.id)
+      io.in(runningGame.id).emit(GAME_EVENT.UPDATE, runningGame.serialize())
+    }
+
     socket.on(GAME_EVENT.CREATE, () => {
       const game = gameService.createGame(user)
 
@@ -111,7 +96,7 @@ export default (httpServer: http.Server) => {
       callback: ({ gameId }, game) => {
         socket.join(gameId)
         const updatedGame = gameService.addPlayerToGame(game, user)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        io.in(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
       }
     }))
 
@@ -121,7 +106,7 @@ export default (httpServer: http.Server) => {
       user,
       callback: ({ gameId }, game) => {
         const updatedGame = gameService.startGame(game)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        io.in(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
       }
     }))
 
@@ -131,7 +116,7 @@ export default (httpServer: http.Server) => {
       user,
       callback: ({ gameId, betSum }, game) => {
         const updatedGame = gameService.placeBet(game, user, betSum)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        io.in(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
       }
     }))
 
@@ -141,7 +126,7 @@ export default (httpServer: http.Server) => {
       user,
       callback: ({ gameId }, game) => {
         const updatedGame = gameService.drawCard(game, user)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        io.in(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
       }
     }))
 
@@ -151,7 +136,7 @@ export default (httpServer: http.Server) => {
       user,
       callback: ({ gameId }, game) => {
         const updatedGame = gameService.finishTurn(game, user)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        io.in(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
       }
     }))
 
@@ -161,7 +146,7 @@ export default (httpServer: http.Server) => {
       user,
       callback: ({ gameId }, game) => {
         const updatedGame = gameService.leaveGame(game, user)
-        socket.to(gameId).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+        socket.to(gameId).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
         socket.leave(gameId)
       }
     }))
@@ -170,7 +155,7 @@ export default (httpServer: http.Server) => {
       const game = gameService.getUserGame(user)
       const updatedGame = gameService.leaveGame(game, user)
       socket.leave(game.id)
-      socket.to(game.id).emit(GAME_EVENT.UPDATE, { game: updatedGame })
+      socket.to(game.id).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
     })
   })
 

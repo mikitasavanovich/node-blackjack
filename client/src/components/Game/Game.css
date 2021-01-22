@@ -1,0 +1,37 @@
+.game {
+  min-height: 500px;
+  border: 1px solid black;
+  width: 60%;
+}
+
+.game__header {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem 0;
+  border-bottom: 2px solid black;
+}
+
+.game__players {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.dealer {
+  min-height: 100px;
+}
+
+.player {
+  padding: 2rem 0;
+  min-width: 200px;
+}
+
+.player__header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.player__money {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}

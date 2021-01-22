@@ -33,11 +33,11 @@ function Lobby() {
     <div className='lobby'>
       <ul className='lobby__games'>
         {games.map(game => (
-          <li key={game.id} className='lobby__game game' onClick={() => joinGame(game.id)}>
-            <div className='game__id'>
+          <li key={game.id} className='lobby__game game-summary' onClick={() => joinGame(game.id)}>
+            <div className='game-summary__id'>
               {game.id}
             </div>
-            <div className='game__players'>
+            <div className='game-summary__players'>
               Joined players: {game.players.length}
             </div>
           </li>

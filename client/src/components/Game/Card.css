@@ -1,0 +1,8 @@
+.card {
+  box-shadow: 0 0 2px 0 inset black;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}

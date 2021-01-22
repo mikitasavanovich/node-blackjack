@@ -29,3 +29,15 @@ export const getGames = (options: { state?: GAME_STATE }) => {
 
   return resultGames
 }
+
+export const findGameByPlayers = (options: { userId?: string }) => {
+  const game = games.find(game =>
+    game.players.some(player =>
+      Object.entries(options).every(
+        ([key, value]) => !value || (player[key] && player[key] === value)
+      )
+    )
+  )
+
+  return game
+}
