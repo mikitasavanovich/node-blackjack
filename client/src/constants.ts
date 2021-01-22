@@ -4,7 +4,7 @@ export const ROUTES = {
   GAME: (gameId = ':gameId') => `/game/${gameId}`
 }
 
-export const BASE_API_URL = 'http://localhost:4001'
+export const BASE_API_URL = 'http://192.168.100.18:4001'
 
 export enum GAME_STATE {
   JOINING = 'JOINING',

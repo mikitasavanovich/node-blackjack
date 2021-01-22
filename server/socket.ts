@@ -44,7 +44,7 @@ const validateGameAndAccessToIt = ({
 export default (httpServer: http.Server) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: 'http://localhost:3000'
+      origin: 'http://192.168.100.18:3000'
     }
   })
 
@@ -151,11 +151,14 @@ export default (httpServer: http.Server) => {
       }
     }))
 
-    socket.on('diconnecting', () => {
+    socket.on('disconnect', () => {
+      console.log('4toby 4to')
       const game = gameService.getUserGame(user)
-      const updatedGame = gameService.leaveGame(game, user)
-      socket.leave(game.id)
-      socket.to(game.id).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
+      if (game) {
+        const updatedGame = gameService.leaveGame(game, user)
+        socket.leave(game.id)
+        socket.to(game.id).emit(GAME_EVENT.UPDATE, updatedGame.serialize())
+      }
     })
   })
 

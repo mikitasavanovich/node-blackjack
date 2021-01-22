@@ -41,7 +41,7 @@ export class Player extends WithHand {
 
   public win (rate: number) {
     this.state = PLAYER_STATE.WON
-    this.buyInSum += this.bet * rate
+    this.buyInSum = +(this.buyInSum + this.bet * rate).toFixed(1)
     this.bet = 0
   }
 

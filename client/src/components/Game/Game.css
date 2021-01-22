@@ -1,14 +1,36 @@
 .game {
-  min-height: 500px;
-  border: 1px solid black;
   width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+  margin: 0 auto;
 }
 
 .game__header {
+  width: 100%;
   display: flex;
   justify-content: space-around;
   padding: 1rem 0;
-  border-bottom: 2px solid black;
+}
+
+.game__board {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.game__buttons {
+  margin-top: 2rem;
+}
+
+.dealer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dealer__hand {
+  width: 20%;
 }
 
 .game__players {

@@ -18,7 +18,7 @@ app.use(async (ctx, next) => {
 })
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://192.168.100.18:3000'
 }))
 app.use(bodyParser())
 app.use(passport.initialize())

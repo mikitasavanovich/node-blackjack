@@ -6,6 +6,7 @@ import Game from '../Game/Game'
 import { ROUTES } from '../../constants'
 import './App.css';
 import { GameContext } from '../../context/Game';
+import UserContextProvider from '../../context/User';
 
 function App() {
   const { initSocketConnection } = useContext(GameContext)
@@ -21,9 +22,11 @@ function App() {
     <div className='app'>
       <Switch>
         <Route exact path={ROUTES.AUTHORIZE} component={Authorize} />
-        <Route exact path={ROUTES.LOBBY} component={Lobby} />
-        <Route exact path={ROUTES.GAME()} component={Game} />
-        <Redirect to={token ? ROUTES.LOBBY : ROUTES.AUTHORIZE} />
+        <UserContextProvider token={token}>
+          <Route exact path={ROUTES.LOBBY} component={Lobby} />
+          <Route exact path={ROUTES.GAME()} component={Game} />
+          <Redirect to={token ? ROUTES.LOBBY : ROUTES.AUTHORIZE} />
+        </UserContextProvider>
       </Switch>
     </div>
   );

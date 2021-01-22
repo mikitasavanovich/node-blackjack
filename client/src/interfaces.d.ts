@@ -36,6 +36,11 @@ export interface IGameContext {
   initSocketConnection: (token: string) => void;
 }
 
+export interface IUserContext {
+  userInfo: IUserInfo | undefined;
+  setUserInfo: (userInfo: IUserInfo) => void;
+}
+
 export interface ISocketGamePayload {
   gameId?: string;
   betSum?: number;

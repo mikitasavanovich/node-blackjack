@@ -34,13 +34,13 @@ export class Game {
         player.addToHand(cards)
 
         if (player instanceof Player) {
+          if (player.getHandScore() > GAME_MAX_VALUE) {
+            player.lose()
+          }
+
           if (player.getHandScore() >= GAME_MAX_VALUE) {
             player.endTurn()
             this.setNextPlayerOrDealer(player)
-          }
-
-          if (player.getHandScore() > GAME_MAX_VALUE) {
-            player.lose()
           }
 
           clearTimeout(this.timer)

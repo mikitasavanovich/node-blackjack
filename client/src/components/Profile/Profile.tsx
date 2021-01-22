@@ -1,25 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import * as ApiService from '../../services/ApiService'
-import { IUserInfo } from '../../interfaces'
+import React, { useContext } from 'react'
 import './Profile.css'
+import { UserContext } from '../../context/User'
 
-interface IProfileProps {
-  children: JSX.Element
-}
-
-function Profile (props: IProfileProps) {
-  const [userInfo, setUserInfo] = useState<IUserInfo>()
-
-  const fetchUserInfo = async () => {
-    const userInfo = await ApiService.getUserInfo()
-    setUserInfo(userInfo)
-  }
-
-  useEffect(() => {
-    fetchUserInfo()
-  }, [])
-
-  const child = React.cloneElement(props.children, { userInfo })
+function Profile () {
+  const { userInfo } = useContext(UserContext)
 
   return (
     <div className='profile'>
@@ -32,15 +16,8 @@ function Profile (props: IProfileProps) {
           </>
         )}
       </div>
-      {child}
     </div>
   )
 }
 
 export default Profile
-
-export const withProfile = (Component: (props: any) => JSX.Element | null) => () => (
-  <Profile>
-    <Component />
-  </Profile>
-)

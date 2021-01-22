@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { withProfile } from '../Profile/Profile'
 import * as ApiService from '../../services/ApiService'
+import Profile from '../Profile/Profile'
 import { GAME_EVENT } from '../../constants'
 import { IGame } from '../../interfaces'
 import './Lobby.css'
@@ -9,8 +8,6 @@ import socketService from '../../services/SocketService'
 
 function Lobby() {
   const [games, setGames] = useState<IGame[]>([])
-
-  const history = useHistory()
 
   const fetchGames = async () => {
     const games = await ApiService.getGames()
@@ -31,6 +28,7 @@ function Lobby() {
  
   return (
     <div className='lobby'>
+      <Profile />
       <ul className='lobby__games'>
         {games.map(game => (
           <li key={game.id} className='lobby__game game-summary' onClick={() => joinGame(game.id)}>
@@ -50,4 +48,4 @@ function Lobby() {
   )
 }
 
-export default withProfile(Lobby)
+export default Lobby
