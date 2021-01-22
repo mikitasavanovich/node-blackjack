@@ -1,28 +1,27 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'
-import io from 'socket.io-client'
 import Authorize from '../Authorize/Authorize'
+import Lobby from '../Lobby/Lobby'
 import { ROUTES } from '../../constants'
 import './App.css';
+import { GameContext } from '../../context/Game';
 
 function App() {
-  // React.useEffect(() => {
-  //   const socket = io('http://localhost:4001', {
-  //     transportOptions: {
-  //       polling: {
-  //         extraHeaders: {
-  //           Authorization: 'Basic bmlraXRhMzoxMTExMTE='
-  //         }
-  //       }
-  //     }
-  //   })
-  // }, [])
+  const { initSocketConnection } = useContext(GameContext)
+  const token = localStorage.getItem('TOKEN')
+
+  useEffect(() => {
+    if (token) {
+      initSocketConnection && initSocketConnection(token)
+    }
+  }, [token])
 
   return (
     <div className='app'>
       <Switch>
         <Route exact path={ROUTES.AUTHORIZE} component={Authorize} />
-        <Redirect to={ROUTES.AUTHORIZE} />
+        <Route exact path={ROUTES.LOBBY} component={Lobby} />
+        <Redirect to={token ? ROUTES.LOBBY : ROUTES.AUTHORIZE} />
       </Switch>
     </div>
   );

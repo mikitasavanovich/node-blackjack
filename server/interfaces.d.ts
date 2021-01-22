@@ -18,3 +18,8 @@ export interface ServiceResponse<T> {
   data?: T;
   message?: string;
 }
+
+export interface SocketGamePayload {
+  gameId?: string;
+  betSum?: number;
+}

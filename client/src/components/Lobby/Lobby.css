@@ -1,0 +1,23 @@
+.lobby {
+  width: 60%;
+}
+
+.lobby__games {
+  height: 300px;
+  width: 100%;
+  border: 1px solid black;
+  list-style: none;
+}
+
+.lobby__game {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid darkgray;
+  background: #cbcbcb;
+  display: flex;
+  gap: 5rem;
+}
+
+.lobby__game:hover {
+  color: darkblue;
+}

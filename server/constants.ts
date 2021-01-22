@@ -64,6 +64,7 @@ export enum PLAYER_STATE {
 }
 
 export enum GAME_EVENT {
+  CREATE = 'game:create',
   JOIN = 'game:join',
   START = 'game:start',
   BET = 'game:bet',
